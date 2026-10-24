@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: nginx:does-not-exist
+        image: nginx:alpine
         ports:
         - containerPort: 80
         resources:
