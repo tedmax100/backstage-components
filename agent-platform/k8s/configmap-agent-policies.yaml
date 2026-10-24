@@ -347,6 +347,25 @@ data:
     default allow := false
     allow if { input.method == "GET"; input.path == ["health"] }
     allow if { input.method == "POST"; input.path == ["v1", "data", "agent", "tool_validation", "decision"] }
+  tenant-isolation.rego: |
+    package agent.tool_validation
+
+    import rego.v1
+
+    valid_tenant_identity if {
+        is_string(input.identity.tenant_id)
+        input.identity.tenant_id != ""
+    }
+
+    deny contains "invalid_tenant_identity" if {
+        not valid_tenant_identity
+    }
+
+    deny contains "tenant_denied" if {
+        valid_target
+        valid_tenant_identity
+        input.identity.tenant_id != input.target.tenant_id
+    }
 kind: ConfigMap
 metadata:
   creationTimestamp: null
