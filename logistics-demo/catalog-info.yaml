@@ -1,0 +1,18 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: logistics-demo
+  description: Logistics demo application
+  annotations:
+    backstage.io/kubernetes-id: logistics-demo
+    backstage.io/kubernetes-namespace: logistics-demo
+    github.com/project-slug: tedmax100/backstage-components
+    platform.example.com/manifest-path: logistics-demo/k8s/deployment.yaml
+    platform.example.com/workload-name: logistics-demo
+    platform.example.com/environment: dev
+    platform.example.com/tenant: tenant-a
+    platform.example.com/namespace-scope: dedicated
+spec:
+  type: website
+  lifecycle: experimental
+  owner: user:guest

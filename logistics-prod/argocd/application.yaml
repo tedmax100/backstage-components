@@ -1,0 +1,16 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: logistics-prod
+  namespace: argocd
+  labels:
+    app: logistics-prod
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/tedmax100/backstage-components
+    targetRevision: HEAD
+    path: logistics-prod/k8s
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: logistics-prod

@@ -1,0 +1,16 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: payments-demo
+  namespace: argocd
+  labels:
+    app: payments-demo
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/tedmax100/backstage-components
+    targetRevision: HEAD
+    path: payments-demo/k8s
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: payments-demo
