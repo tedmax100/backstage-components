@@ -20,7 +20,7 @@ spec:
       serviceAccountName: agent-runtime
       containers:
       - name: agent
-        image: agent-runtime:0.7.3
+        image: agent-runtime:0.7.5
         imagePullPolicy: IfNotPresent
         ports:
         - name: http
@@ -42,10 +42,12 @@ spec:
           value: /state/memory/MEMORY.md
         - name: SKILLS_DIR
           value: /state/skills
+        - name: AUDIT_LOG
+          value: /state/audit/AUDIT.log
+        - name: AGENT_ID
+          value: platform-ops
         - name: MCP_GITOPS_URL
           value: http://gitops-mcp.agent-platform.svc.cluster.local:8080
-        - name: MCP_CLUSTER_URL
-          value: http://cluster-mcp.agent-platform.svc.cluster.local:8080
         - name: GITHUB_REPO_OWNER
           value: tedmax100
         - name: GITHUB_REPO_NAME
@@ -57,9 +59,16 @@ spec:
             secretKeyRef:
               name: gitops-mcp-github
               key: GITHUB_PERSONAL_ACCESS_TOKEN
+        - name: LANGFUSE_HOST
+          value: http://langfuse.langfuse.svc.cluster.local:3000
+        - name: MCP_CLUSTER_URL
+          value: http://cluster-mcp.agent-platform.svc.cluster.local:8080
         envFrom:
         - secretRef:
             name: agent-llm-credentials
+        - secretRef:
+            name: agent-langfuse-keys
+            optional: true
         - secretRef:
             name: agent-backstage-read
             optional: true
@@ -72,6 +81,8 @@ spec:
           readOnly: true
         - name: memory
           mountPath: /state/memory
+        - name: audit
+          mountPath: /state/audit
         - name: sessions
           mountPath: /state/sessions
         startupProbe:
@@ -109,6 +120,9 @@ spec:
       - name: memory
         persistentVolumeClaim:
           claimName: agent-memory
+      - name: audit
+        persistentVolumeClaim:
+          claimName: agent-audit
       - name: sessions
         emptyDir: {}
       automountServiceAccountToken: false
