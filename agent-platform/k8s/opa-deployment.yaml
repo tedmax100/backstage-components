@@ -15,7 +15,7 @@ spec:
       labels:
         app: opa-policy-engine
       annotations:
-        chapter08/policy-hash: dee1156604f369e31962e0c96df9edb34b4df0d8513b75400dbfc87b77cc106c
+        chapter08/policy-hash: 158a003bbbe9ad1a4568fc498818aa8d434aad8090774b0e54bd13c286d596a9
     spec:
       automountServiceAccountToken: false
       containers:
@@ -38,6 +38,7 @@ spec:
         - --authorization=basic
         - /policies/roles.yaml
         - /policies/agent-tool-validation.rego
+        - /policies/tenant-isolation.rego
         - /policies/system-authz.rego
         readinessProbe:
           httpGet:
