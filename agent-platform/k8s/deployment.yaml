@@ -20,7 +20,7 @@ spec:
       serviceAccountName: agent-runtime
       containers:
       - name: agent
-        image: agent-runtime:0.8.1
+        image: agent-runtime:0.8.2
         imagePullPolicy: IfNotPresent
         ports:
         - name: http
@@ -47,9 +47,9 @@ spec:
         - name: AGENT_ID
           value: platform-ops
         - name: SECURITY_MODE
-          value: guardrail
+          value: opa
         - name: OPA_ENABLED
-          value: 'false'
+          value: 'true'
         - name: TENANT_ISOLATION
           value: 'false'
         - name: MCP_GITOPS_URL
