@@ -20,7 +20,7 @@ spec:
       serviceAccountName: agent-runtime
       containers:
       - name: agent
-        image: agent-runtime:0.8.2
+        image: agent-runtime:0.8.3
         imagePullPolicy: IfNotPresent
         ports:
         - name: http
@@ -47,11 +47,9 @@ spec:
         - name: AGENT_ID
           value: platform-ops
         - name: SECURITY_MODE
-          value: opa
+          value: signed-token
         - name: OPA_ENABLED
           value: 'true'
-        - name: TENANT_ISOLATION
-          value: 'false'
         - name: MCP_GITOPS_URL
           value: http://gitops-mcp.agent-platform.svc.cluster.local:8080
         - name: GITHUB_REPO_OWNER
@@ -69,6 +67,10 @@ spec:
           value: http://langfuse.langfuse.svc.cluster.local:3000
         - name: MCP_CLUSTER_URL
           value: http://cluster-mcp.agent-platform.svc.cluster.local:8080
+        - name: TOKEN_ISSUER
+          value: http://localhost:18083/realms/platform
+        - name: TOKEN_JWKS_URL
+          value: http://keycloak.agent-platform.svc.cluster.local:8080/realms/platform/protocol/openid-connect/certs
         envFrom:
         - secretRef:
             name: agent-llm-credentials
