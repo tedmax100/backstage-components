@@ -20,7 +20,7 @@ spec:
       serviceAccountName: agent-runtime
       containers:
       - name: agent
-        image: agent-runtime:0.7.2
+        image: agent-runtime:0.7.3
         imagePullPolicy: IfNotPresent
         ports:
         - name: http
@@ -28,15 +28,58 @@ spec:
         env:
         - name: LLM_PROVIDER
           value: ollama
-        - name: OLLAMA_HOST
-          value: "http://172.18.0.1:11434"
         - name: OLLAMA_MODEL_ID
-          value: "qwen2.5:7b"
+          value: qwen2.5:7b
+        - name: OLLAMA_HOST
+          value: http://172.18.0.1:11434
+        - name: BACKSTAGE_URL
+          value: http://172.18.0.1:7007
+        - name: IDENTITY_DIR
+          value: /state/identity
+        - name: SESSION_DIR
+          value: /state/sessions
+        - name: MEMORY_FILE
+          value: /state/memory/MEMORY.md
+        - name: SKILLS_DIR
+          value: /state/skills
+        - name: MCP_GITOPS_URL
+          value: http://gitops-mcp.agent-platform.svc.cluster.local:8080
         - name: MCP_CLUSTER_URL
           value: http://cluster-mcp.agent-platform.svc.cluster.local:8080
+        - name: GITHUB_REPO_OWNER
+          value: tedmax100
+        - name: GITHUB_REPO_NAME
+          value: backstage-components
+        - name: GITHUB_DEFAULT_BRANCH
+          value: main
+        - name: GITHUB_PERSONAL_ACCESS_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: gitops-mcp-github
+              key: GITHUB_PERSONAL_ACCESS_TOKEN
         envFrom:
         - secretRef:
             name: agent-llm-credentials
+        - secretRef:
+            name: agent-backstage-read
+            optional: true
+        volumeMounts:
+        - name: identity
+          mountPath: /state/identity
+          readOnly: true
+        - name: skills-fix-image-tag
+          mountPath: /state/skills/fix-image-tag
+          readOnly: true
+        - name: memory
+          mountPath: /state/memory
+        - name: sessions
+          mountPath: /state/sessions
+        startupProbe:
+          httpGet:
+            path: /healthz
+            port: http
+          periodSeconds: 5
+          failureThreshold: 60
         readinessProbe:
           httpGet:
             path: /healthz
@@ -56,4 +99,16 @@ spec:
           limits:
             cpu: 1000m
             memory: 1Gi
+      volumes:
+      - name: identity
+        configMap:
+          name: agent-identity
+      - name: skills-fix-image-tag
+        configMap:
+          name: agent-skills-fix-image-tag
+      - name: memory
+        persistentVolumeClaim:
+          claimName: agent-memory
+      - name: sessions
+        emptyDir: {}
       automountServiceAccountToken: false
