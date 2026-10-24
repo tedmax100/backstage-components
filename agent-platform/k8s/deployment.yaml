@@ -20,7 +20,7 @@ spec:
       serviceAccountName: agent-runtime
       containers:
       - name: agent
-        image: agent-runtime:0.7.5
+        image: agent-runtime:0.8.1
         imagePullPolicy: IfNotPresent
         ports:
         - name: http
@@ -46,6 +46,12 @@ spec:
           value: /state/audit/AUDIT.log
         - name: AGENT_ID
           value: platform-ops
+        - name: SECURITY_MODE
+          value: guardrail
+        - name: OPA_ENABLED
+          value: 'false'
+        - name: TENANT_ISOLATION
+          value: 'false'
         - name: MCP_GITOPS_URL
           value: http://gitops-mcp.agent-platform.svc.cluster.local:8080
         - name: GITHUB_REPO_OWNER
@@ -71,7 +77,6 @@ spec:
             optional: true
         - secretRef:
             name: agent-backstage-read
-            optional: true
         volumeMounts:
         - name: identity
           mountPath: /state/identity
@@ -93,7 +98,7 @@ spec:
           failureThreshold: 60
         readinessProbe:
           httpGet:
-            path: /healthz
+            path: /readyz
             port: http
           initialDelaySeconds: 5
           periodSeconds: 10

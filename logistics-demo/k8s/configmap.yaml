@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: logistics-demo-html
+  namespace: logistics-demo
+  labels:
+    app: logistics-demo
+data:
+  index.html: |
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>logistics-demo</title>
+      <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background: #f5f5f5; }
+        .container { background: white; padding: 30px; border-radius: 8px; max-width: 600px; margin: 0 auto; }
+        h1 { color: #333; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <h1>logistics-demo</h1>
+        <p>Logistics demo application</p>
+        <p><strong>Namespace:</strong> logistics-demo</p>
+        <p><strong>Owner:</strong> user:guest</p>
+      </div>
+    </body>
+    </html>

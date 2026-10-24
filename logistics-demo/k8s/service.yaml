@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: logistics-demo
+  namespace: logistics-demo
+  labels:
+    app: logistics-demo
+    backstage.io/kubernetes-id: logistics-demo
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    app: logistics-demo
