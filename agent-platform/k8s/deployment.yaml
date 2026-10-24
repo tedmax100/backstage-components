@@ -19,61 +19,41 @@ spec:
     spec:
       serviceAccountName: agent-runtime
       containers:
-        - name: agent
-          image: agent-runtime:0.7.1
-          imagePullPolicy: IfNotPresent
-          ports:
-            - name: http
-              containerPort: 8080
-          env:
-            - name: LLM_PROVIDER
-              value: ollama
-            - name: OLLAMA_HOST
-              value: "http://172.18.0.1:11434"
-            - name: OLLAMA_MODEL_ID
-              value: "qwen2.5:7b"
-            - name: IDENTITY_DIR
-              value: /state/identity
-            - name: SESSION_DIR
-              value: /state/sessions
-            - name: MEMORY_FILE
-              value: /state/memory/MEMORY.md
-          envFrom:
-            - secretRef:
-                name: agent-llm-credentials
-          volumeMounts:
-            - name: identity
-              mountPath: /state/identity
-              readOnly: true
-            - name: memory
-              mountPath: /state/memory
-            - name: sessions
-              mountPath: /state/sessions
-          readinessProbe:
-            httpGet:
-              path: /healthz
-              port: http
-            initialDelaySeconds: 5
-            periodSeconds: 10
-          livenessProbe:
-            httpGet:
-              path: /healthz
-              port: http
-            initialDelaySeconds: 15
-            periodSeconds: 30
-          resources:
-            requests:
-              cpu: 100m
-              memory: 256Mi
-            limits:
-              cpu: 1000m
-              memory: 1Gi
-      volumes:
-        - name: identity
-          configMap:
-            name: agent-identity
-        - name: memory
-          persistentVolumeClaim:
-            claimName: agent-memory
-        - name: sessions
-          emptyDir: {}
+      - name: agent
+        image: agent-runtime:0.7.2
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: http
+          containerPort: 8080
+        env:
+        - name: LLM_PROVIDER
+          value: ollama
+        - name: OLLAMA_HOST
+          value: "http://172.18.0.1:11434"
+        - name: OLLAMA_MODEL_ID
+          value: "qwen2.5:7b"
+        - name: MCP_CLUSTER_URL
+          value: http://cluster-mcp.agent-platform.svc.cluster.local:8080
+        envFrom:
+        - secretRef:
+            name: agent-llm-credentials
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: http
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: http
+          initialDelaySeconds: 15
+          periodSeconds: 30
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 1000m
+            memory: 1Gi
+      automountServiceAccountToken: false
