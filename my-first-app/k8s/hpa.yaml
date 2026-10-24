@@ -2,7 +2,7 @@ apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: my-first-app-hpa
-  namespace: default
+  namespace: my-first-app
   labels:
     app: my-first-app
 spec:

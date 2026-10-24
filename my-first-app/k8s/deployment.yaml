@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: my-first-app
-  namespace: default
+  namespace: my-first-app
   labels:
     app: my-first-app
     backstage.io/kubernetes-id: my-first-app

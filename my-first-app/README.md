@@ -6,13 +6,13 @@ My first Backstage-deployed app
 
 Deployed via ArgoCD GitOps.
 
-- **Namespace:** `default`
+- **Namespace:** `my-first-app`
 - **Replicas:** 2 - 10
 
 ## Access
 
 ```bash
-kubectl port-forward -n default svc/my-first-app 8080:80
+kubectl port-forward -n my-first-app svc/my-first-app 8080:80
 ```
 
 Open http://localhost:8080

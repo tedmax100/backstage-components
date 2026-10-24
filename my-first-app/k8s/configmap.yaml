@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: my-first-app-html
-  namespace: default
+  namespace: my-first-app
   labels:
     app: my-first-app
 data:
@@ -21,7 +21,7 @@ data:
       <div class="container">
         <h1>my-first-app</h1>
         <p>My first Backstage-deployed app</p>
-        <p><strong>Namespace:</strong> default</p>
+        <p><strong>Namespace:</strong> my-first-app</p>
         <p><strong>Owner:</strong> user:guest</p>
       </div>
     </body>
